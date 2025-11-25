@@ -14,15 +14,18 @@ public enum ApiErrorEnum {
     CUSTOMER_NOT_FOUND(HttpStatus.NOT_FOUND, "El cliente no fue encontrado."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "El usuario no fue encontrado"),
 
-    USER_EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "El email proporcionado ya se encuentra registrado."),
+    USER_EMAIL_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "El email proporcionado ya se encuentra registrado."),
+    USER_DNI_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "El DNI proporcionado ya se encuenta registrado."),
+    USER_PHONE_NUMBER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "El DNI proporcionado ya se encuenta registrado."),
 
-    VETERINARY_EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "El email proporcionado ya se encuentra registrado."),
-    VETERINARY_DNI_ALREADY_EXISTS(HttpStatus.CONFLICT, "El DNI proporcionado ya se encuenta registrado."),
-    VETERINARY_PHONE_NUMBER_ALREADY_EXISTS(HttpStatus.CONFLICT, "El número telefónico proporcionado ya se encuentra registrado."),
+    VETERINARY_EMAIL_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "El email proporcionado ya se encuentra registrado."),
+    VETERINARY_DNI_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "El DNI proporcionado ya se encuenta registrado."),
+    VETERINARY_PHONE_NUMBER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "El número telefónico proporcionado ya se encuentra registrado."),
 
     CUSTOMER_EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "El email proporcionado ya se encuentra registrado."),
     CUSTOMER_DNI_ALREADY_EXISTS(HttpStatus.CONFLICT, "El DNI proporcionado ya se encuenta registrado."),
     CUSTOMER_PHONE_NUMBER_ALREADY_EXISTS(HttpStatus.CONFLICT, "El DNI proporcionado ya se encuenta registrado."),
+
 
     SHIFT_NOT_AVAILABLE(HttpStatus.BAD_REQUEST, "El turno no está disponible."),
     INVALID_SHIFT_DATE(HttpStatus.BAD_REQUEST, "La fecha del turno debe ser en el futuro."),

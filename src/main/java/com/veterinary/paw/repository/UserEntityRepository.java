@@ -8,4 +8,8 @@ import org.springframework.stereotype.Repository;
 public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
 
     Boolean isExistsByEmail(String email);
+
+    Boolean isExistsByPhoneNumber(String phoneNumber);
+
+    Boolean isExistsByDni(String dni);
 }
