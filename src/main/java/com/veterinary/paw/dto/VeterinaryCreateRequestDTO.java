@@ -6,13 +6,13 @@ import lombok.Builder;
 
 import java.time.LocalDate;
 
-@Builder
-public record VeterinaryCreateRequestDTO(
+public record VeterinaryCreateRequestDTO (
 
-        @NotBlank(message = "El nombre es obligatorio")
-        @Size(max = 100, message = "El nombre no puede exceder los 100 caracteres")
-        @JsonProperty("first_name")
-        String firstName,
+
+                @NotBlank(message = "El nombre es obligatorio")
+                @Size(max = 100, message = "El nombre no puede exceder los 100 caracteres")
+                @JsonProperty("first_name")
+                        String firstName,
 
         @NotBlank(message = "El apellido es obligatorio")
         @Size(max = 100, message = "El apellido no puede exceder los 100 caracteres")
@@ -42,5 +42,5 @@ public record VeterinaryCreateRequestDTO(
         @NotBlank(message = "El DNI es obligatorio")
         @Size(max = 20, message = "El DNI no puede exceder los 20 caracteres")
         String dni
-) {
+){
 }
