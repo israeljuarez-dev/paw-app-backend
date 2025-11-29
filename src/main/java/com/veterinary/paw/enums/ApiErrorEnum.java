@@ -16,7 +16,7 @@ public enum ApiErrorEnum {
 
     USER_EMAIL_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "El email proporcionado ya se encuentra registrado."),
     USER_DNI_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "El DNI proporcionado ya se encuenta registrado."),
-    USER_PHONE_NUMBER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "El DNI proporcionado ya se encuenta registrado."),
+    USER_PHONE_NUMBER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "El número telefónico proporcionado ya se encuenta registrado."),
 
     VETERINARY_EMAIL_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "El email proporcionado ya se encuentra registrado."),
     VETERINARY_DNI_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "El DNI proporcionado ya se encuenta registrado."),
@@ -24,7 +24,7 @@ public enum ApiErrorEnum {
 
     CUSTOMER_EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "El email proporcionado ya se encuentra registrado."),
     CUSTOMER_DNI_ALREADY_EXISTS(HttpStatus.CONFLICT, "El DNI proporcionado ya se encuenta registrado."),
-    CUSTOMER_PHONE_NUMBER_ALREADY_EXISTS(HttpStatus.CONFLICT, "El DNI proporcionado ya se encuenta registrado."),
+    CUSTOMER_PHONE_NUMBER_ALREADY_EXISTS(HttpStatus.CONFLICT, "El número telefónico proporcionado ya se encuenta registrado."),
 
 
     SHIFT_NOT_AVAILABLE(HttpStatus.BAD_REQUEST, "El turno no está disponible."),
@@ -34,9 +34,13 @@ public enum ApiErrorEnum {
     VETERINARY_SHIFT_CONFLICT(HttpStatus.BAD_REQUEST, "Ya existe una reserva para ese intervalo de tiempo."),
     SHIFT_ALREADY_BOOKED(HttpStatus.BAD_REQUEST, "El turno ya ha sido reservado para este veterinario."),
     SHIFT_DOES_NOT_BELONG_TO_VETERINARY(HttpStatus.BAD_REQUEST, "El turno no pertenece al veterinario asignado."),
-    APPOINTMENT_CREATION_FAILED(HttpStatus.BAD_REQUEST, "Ha ocurrido un error al crear la cita.");
+    APPOINTMENT_CREATION_FAILED(HttpStatus.BAD_REQUEST, "Ha ocurrido un error al crear la cita."),
+
+    VETERINARY_SERVICE_NAME_ALREADY_EXISTS(HttpStatus.NOT_FOUND, "El nombre del servicio veterinario ya existe.")
+
 
     ;
+
 
     private HttpStatus status;
 

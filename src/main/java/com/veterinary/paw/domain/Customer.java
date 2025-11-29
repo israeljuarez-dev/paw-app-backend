@@ -3,6 +3,8 @@ package com.veterinary.paw.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -32,4 +34,12 @@ public class Customer {
 
     @Column(name = "email", length = 100, nullable = false, unique = true)
     private String email;
+
+    @OneToMany(
+            mappedBy = "owner",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<Pet> pets;
 }

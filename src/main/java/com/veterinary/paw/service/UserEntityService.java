@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,17 +41,17 @@ public class UserEntityService {
     }
 
     public UserResponseDTO register(UserCreateRequestDTO request) {
-        if (userEntityRepository.isExistsByEmail(request.email())) {
+        if (userEntityRepository.existsByEmail(request.email())) {
             LOGGER.error("Usuario con el email: {} ya existe", request.email());
             throw new PawException(ApiErrorEnum.USER_EMAIL_ALREADY_EXISTS);
         }
 
-        if (userEntityRepository.isExistsByDni(request.dni())){
+        if (userEntityRepository.existsByDni(request.dni())){
             LOGGER.error("El DNI: {} ya pertenece a otro usuario.", request.dni());
             throw new PawException(ApiErrorEnum.USER_DNI_ALREADY_EXISTS);
         }
 
-        if (userEntityRepository.isExistsByPhoneNumber(request.phoneNumber())){
+        if (userEntityRepository.existsByPhoneNumber(request.phoneNumber())){
             LOGGER.error("El número de teléfono: {} ya pertenece a otro usuario.", request.phoneNumber());
             throw new PawException(ApiErrorEnum.USER_PHONE_NUMBER_ALREADY_EXISTS);
         }
@@ -72,21 +71,21 @@ public class UserEntityService {
                 });
 
         if (!userToUpdate.getEmail().equals(request.email())) {
-            if (userEntityRepository.isExistsByEmail(request.email())) {
+            if (userEntityRepository.existsByEmail(request.email())) {
                 LOGGER.error("El email: {} ya pertenece a otro usuario.", request.email());
                 throw new PawException(ApiErrorEnum.USER_EMAIL_ALREADY_EXISTS);
             }
         }
 
         if (!userToUpdate.getDni().equals(request.dni())) {
-            if (userEntityRepository.isExistsByDni(request.dni())) {
+            if (userEntityRepository.existsByDni(request.dni())) {
                 LOGGER.error("El DNI: {} ya pertenece a otro usuario.", request.dni());
                 throw new PawException(ApiErrorEnum.USER_DNI_ALREADY_EXISTS);
             }
         }
 
         if (!userToUpdate.getPhoneNumber().equals(request.phoneNumber())) {
-            if (userEntityRepository.isExistsByPhoneNumber(request.phoneNumber())) {
+            if (userEntityRepository.existsByPhoneNumber(request.phoneNumber())) {
                 LOGGER.error("El número de teléfono: {} ya pertenece a otro usuario.", request.phoneNumber());
                 throw new PawException(ApiErrorEnum.USER_PHONE_NUMBER_ALREADY_EXISTS);
             }

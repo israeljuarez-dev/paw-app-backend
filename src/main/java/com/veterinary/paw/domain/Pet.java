@@ -39,8 +39,7 @@ public class Pet {
 
     @ManyToOne(
             targetEntity = Customer.class,
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
+            fetch = FetchType.LAZY
     )
     @JoinColumn(
             name = "id_customer",

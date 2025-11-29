@@ -5,13 +5,9 @@ import lombok.Builder;
 import java.math.BigDecimal;
 
 @Builder
-public record VeterinaryServiceResponseDTO(
-        Long id,
-
+public record VeterinaryServiceCreateRequestDTO(
         String name,
-
         String description,
-
         BigDecimal price
 ) {
 }

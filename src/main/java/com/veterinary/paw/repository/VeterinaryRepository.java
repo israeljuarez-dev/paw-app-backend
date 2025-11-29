@@ -12,10 +12,10 @@ import java.util.Optional;
 @Repository
 public interface VeterinaryRepository extends JpaRepository<Veterinary, Long> {
 
-    Boolean isExistsByEmail(String email);
+    Boolean existsByEmail(String email);
 
-    Boolean isExistsByPhoneNumber(String phoneNumber);
+    Boolean existsByPhoneNumber(String phoneNumber);
 
-    Boolean isExistsByDni(String dni);
+    Boolean existsByDni(String dni);
 
 }

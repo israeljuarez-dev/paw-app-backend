@@ -58,7 +58,7 @@ public class VeterinaryAppointmentService {
     public VeterinaryAppointmentCreateResponseDTO register(VeterinaryAppointmentCreateRequestDTO request) {
         Pet pet = findPet(request.idPet());
         Veterinary veterinary = findVeterinary(request.idVeterinary());
-        VeterinaryService service = findVeterinaryService(request.idVeterinaryService());
+        com.veterinary.paw.domain.VeterinaryService service = findVeterinaryService(request.idVeterinaryService());
         Shift shift = findShift(request.idShift());
 
         validateAppointmentDateIsFuture(shift.getDate());
@@ -100,7 +100,7 @@ public class VeterinaryAppointmentService {
 
         Pet pet = findPet(request.idPet());
         Veterinary veterinary = findVeterinary(request.idVeterinary());
-        VeterinaryService service = findVeterinaryService(request.idVeterinaryService());
+        com.veterinary.paw.domain.VeterinaryService service = findVeterinaryService(request.idVeterinaryService());
         Shift newShift = findShift(request.idShift());
 
         validateAppointmentDateIsFuture(newShift.getDate());
@@ -170,7 +170,7 @@ public class VeterinaryAppointmentService {
                 });
     }
 
-    private VeterinaryService findVeterinaryService(Long id) {
+    private com.veterinary.paw.domain.VeterinaryService findVeterinaryService(Long id) {
         return veterinaryServiceRepository.findById(id)
                 .orElseThrow(() -> {
                     LOGGER.error("Servicio veterinario no encontrado. ID: {}", id);

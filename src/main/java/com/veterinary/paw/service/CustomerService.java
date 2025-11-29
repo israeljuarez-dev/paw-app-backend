@@ -42,17 +42,17 @@ public class CustomerService {
     }
 
     public CustomerResponseDTO register(CustomerCreateRequestDTO request) {
-        if (customerRepository.isExistsByEmail(request.email())){
+        if (customerRepository.existsByEmail(request.email())){
             LOGGER.error("El email: {} ya pertenece a otro cliente.", request.email());
             throw new PawException(ApiErrorEnum.CUSTOMER_EMAIL_ALREADY_EXISTS);
         }
 
-        if (customerRepository.isExistsByDni(request.dni())){
+        if (customerRepository.existsByDni(request.dni())){
             LOGGER.error("El DNI: {} ya pertenece a otro cliente.", request.dni());
             throw new PawException(ApiErrorEnum.CUSTOMER_DNI_ALREADY_EXISTS);
         }
 
-        if (customerRepository.isExistsByPhoneNumber(request.phoneNumber())){
+        if (customerRepository.existsByPhoneNumber(request.phoneNumber())){
             LOGGER.error("El número de teléfono: {} ya pertenece a otro cliente.", request.phoneNumber());
             throw new PawException(ApiErrorEnum.CUSTOMER_PHONE_NUMBER_ALREADY_EXISTS);
         }
@@ -72,21 +72,21 @@ public class CustomerService {
                 });
 
         if (!customerToUpdate.getEmail().equals(request.email())) {
-            if (customerRepository.isExistsByEmail(request.email())) {
+            if (customerRepository.existsByEmail(request.email())) {
                 LOGGER.error("El email: {} ya pertenece a otro cliente.", request.email());
                 throw new PawException(ApiErrorEnum.CUSTOMER_EMAIL_ALREADY_EXISTS);
             }
         }
 
         if (!customerToUpdate.getDni().equals(request.dni())) {
-            if (customerRepository.isExistsByDni(request.dni())) {
+            if (customerRepository.existsByDni(request.dni())) {
                 LOGGER.error("El DNI: {} ya pertenece a otro cliente.", request.dni());
                 throw new PawException(ApiErrorEnum.CUSTOMER_DNI_ALREADY_EXISTS);
             }
         }
 
         if (!customerToUpdate.getPhoneNumber().equals(request.phoneNumber())) {
-            if (customerRepository.isExistsByPhoneNumber(request.phoneNumber())) {
+            if (customerRepository.existsByPhoneNumber(request.phoneNumber())) {
                 LOGGER.error("El número de teléfono: {} ya pertenece a otro cliente.", request.phoneNumber());
                 throw new PawException(ApiErrorEnum.CUSTOMER_PHONE_NUMBER_ALREADY_EXISTS);
             }

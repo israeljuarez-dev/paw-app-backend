@@ -1,6 +1,7 @@
 package com.veterinary.paw.mapper;
 
 import com.veterinary.paw.domain.VeterinaryService;
+import com.veterinary.paw.dto.VeterinaryServiceCreateRequestDTO;
 import com.veterinary.paw.dto.VeterinaryServiceResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,5 +19,22 @@ public class VeterinaryServiceMapper {
                 .description(veterinaryService.getDescription())
                 .price(veterinaryService.getPrice())
                 .build();
+    }
+
+
+    public VeterinaryService toEntity(VeterinaryServiceCreateRequestDTO request) {
+        if (request == null) return null;
+
+        return VeterinaryService.builder()
+                .name(request.name())
+                .description(request.description())
+                .price(request.price())
+                .build();
+    }
+
+    public void updateEntityFromDTO(VeterinaryService entity, VeterinaryServiceCreateRequestDTO request) {
+        entity.setName(request.name());
+        entity.setDescription(request.description());
+        entity.setPrice(request.price());
     }
 }

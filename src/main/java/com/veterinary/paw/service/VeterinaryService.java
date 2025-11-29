@@ -42,17 +42,17 @@ public class VeterinaryService {
     }
 
     public VeterinaryResponseDTO register(VeterinaryCreateRequestDTO request) {
-        if (veterinaryRepository.isExistsByEmail(request.dni())){
-            LOGGER.error("El email: {} ya pertenece a otro veterinario.", request.email());
-            throw new PawException(ApiErrorEnum.VETERINARY_EMAIL_ALREADY_EXISTS);
-        }
-
-        if (veterinaryRepository.isExistsByDni(request.email())){
+        if (veterinaryRepository.existsByDni(request.email())){
             LOGGER.error("El DNI: {} ya pertenece a otro veterinario.", request.dni());
             throw new PawException(ApiErrorEnum.VETERINARY_DNI_ALREADY_EXISTS);
         }
 
-        if (veterinaryRepository.isExistsByPhoneNumber(request.phoneNumber())){
+        if (veterinaryRepository.existsByEmail(request.dni())){
+            LOGGER.error("El email: {} ya pertenece a otro veterinario.", request.email());
+            throw new PawException(ApiErrorEnum.VETERINARY_EMAIL_ALREADY_EXISTS);
+        }
+
+        if (veterinaryRepository.existsByPhoneNumber(request.phoneNumber())){
             LOGGER.error("El número de teléfono: {} ya pertenece a otro veterinario.", request.phoneNumber());
             throw new PawException(ApiErrorEnum.VETERINARY_PHONE_NUMBER_ALREADY_EXISTS);
         }
@@ -72,21 +72,21 @@ public class VeterinaryService {
                 });
 
         if (!veterinaryToUpdate.getEmail().equals(request.email())) {
-            if (veterinaryRepository.isExistsByEmail(request.email())) {
+            if (veterinaryRepository.existsByEmail(request.email())) {
                 LOGGER.error("El email: {} ya pertenece a otro veterinario.", request.email());
                 throw new PawException(ApiErrorEnum.VETERINARY_EMAIL_ALREADY_EXISTS);
             }
         }
 
         if (!veterinaryToUpdate.getDni().equals(request.dni())) {
-            if (veterinaryRepository.isExistsByDni(request.dni())) {
+            if (veterinaryRepository.existsByDni(request.dni())) {
                 LOGGER.error("El DNI: {} ya pertenece a otro veterinario.", request.dni());
                 throw new PawException(ApiErrorEnum.VETERINARY_DNI_ALREADY_EXISTS);
             }
         }
 
         if (!veterinaryToUpdate.getPhoneNumber().equals(request.phoneNumber())) {
-            if (veterinaryRepository.isExistsByPhoneNumber(request.phoneNumber())) {
+            if (veterinaryRepository.existsByPhoneNumber(request.phoneNumber())) {
                 LOGGER.error("El número de teléfono: {} ya pertenece a otro veterinario.", request.phoneNumber());
                 throw new PawException(ApiErrorEnum.VETERINARY_PHONE_NUMBER_ALREADY_EXISTS);
             }

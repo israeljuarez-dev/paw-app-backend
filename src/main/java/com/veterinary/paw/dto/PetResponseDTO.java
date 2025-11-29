@@ -22,7 +22,7 @@ public record PetResponseDTO(
 
         String specie,
 
-        @JsonProperty("last_name")
+        @JsonProperty("birth_date")
         LocalDate birthDate,
 
         CustomerResponseDTO owner

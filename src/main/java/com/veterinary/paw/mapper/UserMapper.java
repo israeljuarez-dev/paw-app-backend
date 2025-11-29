@@ -18,6 +18,9 @@ public class UserMapper {
         return UserEntity.builder()
                 .email(dto.email())
                 .password(encodedPassword)
+                .dni(dto.dni())
+                .email(dto.email())
+                .phoneNumber(dto.phoneNumber())
                 .build();
     }
 
@@ -35,6 +38,8 @@ public class UserMapper {
     public void updateEntityFromDTO(UserEntity user, UserCreateRequestDTO dto) {
         if (user != null && dto != null) {
             user.setEmail(dto.email());
+            user.setDni(dto.dni());
+            user.setPhoneNumber(dto.phoneNumber());
 
             String encodedPassword = dto.password();
             user.setPassword(encodedPassword);

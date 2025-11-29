@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VeterinaryServiceRepository extends JpaRepository<VeterinaryService, Long> {
+
+    boolean existsByName(String name);
 }
