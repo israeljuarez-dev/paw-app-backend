@@ -2,9 +2,9 @@ package com.veterinary.paw.mapper;
 
 import com.veterinary.paw.domain.Shift;
 import com.veterinary.paw.domain.Veterinary;
-import com.veterinary.paw.dto.ShiftCreateRequestDTO;
-import com.veterinary.paw.dto.ShiftResponseDTO;
-import com.veterinary.paw.dto.VeterinaryResponseDTO;
+import com.veterinary.paw.dto.request.ShiftCreateRequestDTO;
+import com.veterinary.paw.dto.response.ShiftResponseDTO;
+import com.veterinary.paw.dto.response.VeterinaryResponseDTO;
 import com.veterinary.paw.enums.ApiErrorEnum;
 import com.veterinary.paw.exception.PawException;
 import com.veterinary.paw.repository.VeterinaryRepository;

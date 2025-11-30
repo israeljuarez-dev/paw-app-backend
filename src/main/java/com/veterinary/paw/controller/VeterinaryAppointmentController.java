@@ -1,8 +1,8 @@
 package com.veterinary.paw.controller;
 
-import com.veterinary.paw.dto.VeterinaryAppointmentCreateRequestDTO;
-import com.veterinary.paw.dto.VeterinaryAppointmentCreateResponseDTO;
-import com.veterinary.paw.dto.VeterinaryAppointmentResponseDTO;
+import com.veterinary.paw.dto.request.VeterinaryAppointmentCreateRequestDTO;
+import com.veterinary.paw.dto.response.VeterinaryAppointmentCreateResponseDTO;
+import com.veterinary.paw.dto.response.VeterinaryAppointmentResponseDTO;
 import com.veterinary.paw.service.VeterinaryAppointmentService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;

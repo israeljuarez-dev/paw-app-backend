@@ -2,8 +2,8 @@ package com.veterinary.paw.mapper;
 
 import com.veterinary.paw.domain.Customer;
 import com.veterinary.paw.domain.Pet;
-import com.veterinary.paw.dto.PetCreateRequestDTO;
-import com.veterinary.paw.dto.PetResponseDTO;
+import com.veterinary.paw.dto.request.PetCreateRequestDTO;
+import com.veterinary.paw.dto.response.PetResponseDTO;
 import com.veterinary.paw.enums.ApiErrorEnum;
 import com.veterinary.paw.exception.PawException;
 import com.veterinary.paw.repository.CustomerRepository;

@@ -1,7 +1,7 @@
 package com.veterinary.paw.service;
 
-import com.veterinary.paw.dto.VeterinaryServiceCreateRequestDTO;
-import com.veterinary.paw.dto.VeterinaryServiceResponseDTO;
+import com.veterinary.paw.dto.request.VeterinaryServiceCreateRequestDTO;
+import com.veterinary.paw.dto.response.VeterinaryServiceResponseDTO;
 import com.veterinary.paw.enums.ApiErrorEnum;
 import com.veterinary.paw.exception.PawException;
 import com.veterinary.paw.mapper.VeterinaryServiceMapper;
@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,12 +25,14 @@ public class VeterinaryServiceService {
 
     private final VeterinaryServiceMapper veterinaryServiceMapper;
 
+    @Transactional
     public List<VeterinaryServiceResponseDTO> get() {
         return veterinaryServiceRepository.findAll().stream()
                 .map(veterinaryServiceMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public VeterinaryServiceResponseDTO getById(Long id) {
         com.veterinary.paw.domain.VeterinaryService veterinaryService = veterinaryServiceRepository.findById(id)
                 .orElseThrow( () -> {
@@ -40,6 +43,7 @@ public class VeterinaryServiceService {
         return veterinaryServiceMapper.toResponseDTO(veterinaryService);
     }
 
+    @Transactional
     public VeterinaryServiceResponseDTO register(VeterinaryServiceCreateRequestDTO request) {
         if (veterinaryServiceRepository.existsByName(request.name())){
             LOGGER.error("El nombre de servicio: {} ya existe.", request.name());
@@ -53,6 +57,7 @@ public class VeterinaryServiceService {
         return veterinaryServiceMapper.toResponseDTO(savedService);
     }
 
+    @Transactional
     public VeterinaryServiceResponseDTO update(Long id, VeterinaryServiceCreateRequestDTO request) {
         com.veterinary.paw.domain.VeterinaryService serviceToUpdate = veterinaryServiceRepository.findById(id)
                 .orElseThrow(() -> {
@@ -74,6 +79,7 @@ public class VeterinaryServiceService {
         return veterinaryServiceMapper.toResponseDTO(updatedService);
     }
 
+    @Transactional
     public void delete(Long id) {
         if (!veterinaryServiceRepository.existsById(id)) {
             throw new PawException(ApiErrorEnum.VETERINARY_SERVICE_NOT_FOUND);

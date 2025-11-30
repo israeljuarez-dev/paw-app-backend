@@ -1,6 +1,6 @@
 package com.veterinary.paw.exception;
 
-import com.veterinary.paw.dto.ErrorDTO;
+import com.veterinary.paw.dto.error.ErrorDTO;
 import com.veterinary.paw.enums.ApiErrorEnum;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;

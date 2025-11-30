@@ -1,7 +1,7 @@
 package com.veterinary.paw.controller;
 
-import com.veterinary.paw.dto.UserCreateRequestDTO;
-import com.veterinary.paw.dto.UserResponseDTO;
+import com.veterinary.paw.dto.request.UserCreateRequestDTO;
+import com.veterinary.paw.dto.response.UserResponseDTO;
 import com.veterinary.paw.service.UserEntityService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -45,16 +45,11 @@ public class UserController {
         return ResponseEntity.ok(responses);
     }
 
-    @PostMapping
-    public ResponseEntity<UserResponseDTO> registerUser(
-            @RequestBody @Valid UserCreateRequestDTO request
-    ){
-        LOGGER.info("➡Ingresando al método registerUser() con email: {}", request.email());
-
-        UserResponseDTO response = userService.register(request);
-
-        LOGGER.info("Registro exitoso. Nuevo usuario ID: {}", response.id());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    @PostMapping("/register")
+    public ResponseEntity<UserResponseDTO> register(@RequestBody @Valid UserCreateRequestDTO request){
+        LOGGER.info("Ingresando al método registerUser() con email: {}", request.email());
+        UserResponseDTO userResponse = userService.register(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
     @PutMapping("/{id}")

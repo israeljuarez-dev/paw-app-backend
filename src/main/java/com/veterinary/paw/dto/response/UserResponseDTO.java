@@ -1,4 +1,4 @@
-package com.veterinary.paw.dto;
+package com.veterinary.paw.dto.response;
 
 import lombok.Builder;
 

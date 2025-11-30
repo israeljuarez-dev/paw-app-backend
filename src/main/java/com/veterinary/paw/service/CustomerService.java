@@ -1,8 +1,8 @@
 package com.veterinary.paw.service;
 
 import com.veterinary.paw.domain.Customer;
-import com.veterinary.paw.dto.CustomerCreateRequestDTO;
-import com.veterinary.paw.dto.CustomerResponseDTO;
+import com.veterinary.paw.dto.request.CustomerCreateRequestDTO;
+import com.veterinary.paw.dto.response.CustomerResponseDTO;
 import com.veterinary.paw.enums.ApiErrorEnum;
 import com.veterinary.paw.exception.PawException;
 import com.veterinary.paw.mapper.CustomerMapper;
@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,12 +26,14 @@ public class CustomerService {
 
     private final CustomerMapper customerMapper;
 
+    @Transactional(readOnly = true)
     public List<CustomerResponseDTO> get() {
         return customerRepository.findAll().stream()
                 .map(customerMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public CustomerResponseDTO getById(Long id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow( () -> {
@@ -41,6 +44,7 @@ public class CustomerService {
         return customerMapper.toResponseDto(customer);
     }
 
+    @Transactional
     public CustomerResponseDTO register(CustomerCreateRequestDTO request) {
         if (customerRepository.existsByEmail(request.email())){
             LOGGER.error("El email: {} ya pertenece a otro cliente.", request.email());
@@ -64,6 +68,7 @@ public class CustomerService {
         return customerMapper.toResponseDto(savedCustomer);
     }
 
+    @Transactional
     public CustomerResponseDTO update(Long id, CustomerCreateRequestDTO request) {
         Customer customerToUpdate = customerRepository.findById(id)
                 .orElseThrow(() -> {
@@ -99,6 +104,7 @@ public class CustomerService {
         return customerMapper.toResponseDto(updatedCustomer);
     }
 
+    @Transactional
     public void delete(Long id) {
         if (!customerRepository.existsById(id)) {
             throw new PawException(ApiErrorEnum.CUSTOMER_NOT_FOUND);

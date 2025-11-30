@@ -1,8 +1,8 @@
 package com.veterinary.paw.mapper;
 
 import com.veterinary.paw.domain.Customer;
-import com.veterinary.paw.dto.CustomerCreateRequestDTO;
-import com.veterinary.paw.dto.CustomerResponseDTO;
+import com.veterinary.paw.dto.request.CustomerCreateRequestDTO;
+import com.veterinary.paw.dto.response.CustomerResponseDTO;
 import org.springframework.stereotype.Component;
 
 @Component

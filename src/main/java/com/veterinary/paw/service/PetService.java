@@ -2,8 +2,8 @@ package com.veterinary.paw.service;
 
 
 import com.veterinary.paw.domain.Pet;
-import com.veterinary.paw.dto.PetCreateRequestDTO;
-import com.veterinary.paw.dto.PetResponseDTO;
+import com.veterinary.paw.dto.request.PetCreateRequestDTO;
+import com.veterinary.paw.dto.response.PetResponseDTO;
 import com.veterinary.paw.enums.ApiErrorEnum;
 import com.veterinary.paw.exception.PawException;
 import com.veterinary.paw.mapper.PetMapper;
@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,12 +27,14 @@ public class PetService {
 
     private final PetMapper petMapper;
 
+    @Transactional(readOnly = true)
     public List<PetResponseDTO> get() {
         return petRepository.findAll().stream()
                 .map(petMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public PetResponseDTO getById(Long id) {
         Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> {
@@ -42,6 +45,7 @@ public class PetService {
         return petMapper.toResponseDTO(pet);
     }
 
+    @Transactional
     public PetResponseDTO register(PetCreateRequestDTO request) {
         Pet newPet = petMapper.toEntity(request);
 
@@ -50,6 +54,7 @@ public class PetService {
         return petMapper.toResponseDTO(savedPet);
     }
 
+    @Transactional
     public PetResponseDTO update(Long id, PetCreateRequestDTO request) {
         Pet petToUpdate = petRepository.findById(id)
                 .orElseThrow(() -> {
@@ -64,6 +69,7 @@ public class PetService {
         return petMapper.toResponseDTO(updatedPet);
     }
 
+    @Transactional
     public void delete(Long id) {
         if (!petRepository.existsById(id)) {
             LOGGER.error("Mascota no encontrada para eliminar ID: {}", id);

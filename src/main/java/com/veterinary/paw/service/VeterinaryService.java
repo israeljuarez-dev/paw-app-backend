@@ -1,8 +1,8 @@
 package com.veterinary.paw.service;
 
 import com.veterinary.paw.domain.Veterinary;
-import com.veterinary.paw.dto.VeterinaryCreateRequestDTO;
-import com.veterinary.paw.dto.VeterinaryResponseDTO;
+import com.veterinary.paw.dto.request.VeterinaryCreateRequestDTO;
+import com.veterinary.paw.dto.response.VeterinaryResponseDTO;
 import com.veterinary.paw.enums.ApiErrorEnum;
 import com.veterinary.paw.exception.PawException;
 import com.veterinary.paw.mapper.VeterinaryMapper;
@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,12 +26,14 @@ public class VeterinaryService {
 
     private final VeterinaryMapper veterinaryMapper;
 
+    @Transactional(readOnly = true)
     public List<VeterinaryResponseDTO> get() {
         return veterinaryRepository.findAll().stream()
                 .map(veterinaryMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public VeterinaryResponseDTO getById(Long id) {
         Veterinary veterinary = veterinaryRepository.findById(id)
                 .orElseThrow( () -> {
@@ -41,6 +44,7 @@ public class VeterinaryService {
         return veterinaryMapper.toResponseDTO(veterinary);
     }
 
+    @Transactional
     public VeterinaryResponseDTO register(VeterinaryCreateRequestDTO request) {
         if (veterinaryRepository.existsByDni(request.email())){
             LOGGER.error("El DNI: {} ya pertenece a otro veterinario.", request.dni());
@@ -64,6 +68,7 @@ public class VeterinaryService {
         return veterinaryMapper.toResponseDTO(savedVeterinary);
     }
 
+    @Transactional
     public VeterinaryResponseDTO update(Long id, VeterinaryCreateRequestDTO request) {
         Veterinary veterinaryToUpdate = veterinaryRepository.findById(id)
                 .orElseThrow(() -> {
@@ -99,6 +104,7 @@ public class VeterinaryService {
         return veterinaryMapper.toResponseDTO(updatedVeterinary);
     }
 
+    @Transactional
     public void delete(Long id) {
         if (!veterinaryRepository.existsById(id)) {
             throw new PawException(ApiErrorEnum.VETERINARY_NOT_FOUND);

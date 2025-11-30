@@ -1,4 +1,4 @@
-package com.veterinary.paw.dto;
+package com.veterinary.paw.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;

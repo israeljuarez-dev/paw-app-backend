@@ -1,8 +1,8 @@
 package com.veterinary.paw.mapper;
 
 import com.veterinary.paw.domain.VeterinaryService;
-import com.veterinary.paw.dto.VeterinaryServiceCreateRequestDTO;
-import com.veterinary.paw.dto.VeterinaryServiceResponseDTO;
+import com.veterinary.paw.dto.request.VeterinaryServiceCreateRequestDTO;
+import com.veterinary.paw.dto.response.VeterinaryServiceResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

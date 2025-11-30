@@ -1,7 +1,7 @@
 package com.veterinary.paw.controller;
 
-import com.veterinary.paw.dto.VeterinaryCreateRequestDTO;
-import com.veterinary.paw.dto.VeterinaryResponseDTO;
+import com.veterinary.paw.dto.request.VeterinaryCreateRequestDTO;
+import com.veterinary.paw.dto.response.VeterinaryResponseDTO;
 import com.veterinary.paw.service.VeterinaryService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;

@@ -1,4 +1,4 @@
-package com.veterinary.paw.dto;
+package com.veterinary.paw.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

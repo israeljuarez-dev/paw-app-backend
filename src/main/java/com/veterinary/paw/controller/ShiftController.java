@@ -1,7 +1,7 @@
 package com.veterinary.paw.controller;
 
-import com.veterinary.paw.dto.ShiftCreateRequestDTO;
-import com.veterinary.paw.dto.ShiftResponseDTO;
+import com.veterinary.paw.dto.request.ShiftCreateRequestDTO;
+import com.veterinary.paw.dto.response.ShiftResponseDTO;
 import com.veterinary.paw.service.ShiftService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;

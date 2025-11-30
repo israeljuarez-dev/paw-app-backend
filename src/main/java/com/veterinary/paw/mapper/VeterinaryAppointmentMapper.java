@@ -1,9 +1,9 @@
 package com.veterinary.paw.mapper;
 
 import com.veterinary.paw.domain.*;
-import com.veterinary.paw.dto.VeterinaryAppointmentCreateRequestDTO;
-import com.veterinary.paw.dto.VeterinaryAppointmentCreateResponseDTO;
-import com.veterinary.paw.dto.VeterinaryAppointmentResponseDTO;
+import com.veterinary.paw.dto.request.VeterinaryAppointmentCreateRequestDTO;
+import com.veterinary.paw.dto.response.VeterinaryAppointmentCreateResponseDTO;
+import com.veterinary.paw.dto.response.VeterinaryAppointmentResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

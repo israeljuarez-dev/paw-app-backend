@@ -1,9 +1,9 @@
 package com.veterinary.paw.service;
 
 import com.veterinary.paw.domain.*;
-import com.veterinary.paw.dto.VeterinaryAppointmentCreateRequestDTO;
-import com.veterinary.paw.dto.VeterinaryAppointmentCreateResponseDTO;
-import com.veterinary.paw.dto.VeterinaryAppointmentResponseDTO;
+import com.veterinary.paw.dto.request.VeterinaryAppointmentCreateRequestDTO;
+import com.veterinary.paw.dto.response.VeterinaryAppointmentCreateResponseDTO;
+import com.veterinary.paw.dto.response.VeterinaryAppointmentResponseDTO;
 import com.veterinary.paw.enums.ApiErrorEnum;
 import com.veterinary.paw.exception.PawException;
 import com.veterinary.paw.mapper.VeterinaryAppointmentMapper;
@@ -34,6 +34,7 @@ public class VeterinaryAppointmentService {
     private final VeterinaryServiceRepository veterinaryServiceRepository;
 
     private final VeterinaryAppointmentMapper veterinaryAppointmentMapper;
+
 
     @Transactional(readOnly = true)
     public List<VeterinaryAppointmentResponseDTO> get(){
