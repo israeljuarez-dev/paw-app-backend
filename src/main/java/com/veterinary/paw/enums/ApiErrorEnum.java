@@ -36,7 +36,9 @@ public enum ApiErrorEnum {
     SHIFT_DOES_NOT_BELONG_TO_VETERINARY(HttpStatus.BAD_REQUEST, "El turno no pertenece al veterinario asignado."),
     APPOINTMENT_CREATION_FAILED(HttpStatus.BAD_REQUEST, "Ha ocurrido un error al crear la cita."),
 
-    VETERINARY_SERVICE_NAME_ALREADY_EXISTS(HttpStatus.NOT_FOUND, "El nombre del servicio veterinario ya existe.")
+    VETERINARY_SERVICE_NAME_ALREADY_EXISTS(HttpStatus.NOT_FOUND, "El nombre del servicio veterinario ya existe."),
+
+    INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Email o contraseña incorrectos."),
 
 
     ;
