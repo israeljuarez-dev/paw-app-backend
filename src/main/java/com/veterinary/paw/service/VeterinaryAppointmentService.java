@@ -1,6 +1,7 @@
 package com.veterinary.paw.service;
 
 import com.veterinary.paw.domain.*;
+import com.veterinary.paw.dto.criteria.appointment.SearchVeterinaryAppointmentCriteriaDTO;
 import com.veterinary.paw.dto.request.VeterinaryAppointmentCreateRequestDTO;
 import com.veterinary.paw.dto.response.VeterinaryAppointmentCreateResponseDTO;
 import com.veterinary.paw.dto.response.VeterinaryAppointmentResponseDTO;
@@ -8,14 +9,19 @@ import com.veterinary.paw.enums.ApiErrorEnum;
 import com.veterinary.paw.exception.PawException;
 import com.veterinary.paw.mapper.VeterinaryAppointmentMapper;
 import com.veterinary.paw.repository.*;
+import com.veterinary.paw.specification.appointment.AppointmentSpecification;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +43,16 @@ public class VeterinaryAppointmentService {
 
 
     @Transactional(readOnly = true)
-    public List<VeterinaryAppointmentResponseDTO> get(){
-        List<VeterinaryAppointment> appointments = veterinaryAppointmentRepository.findAll();
+    public List<VeterinaryAppointmentResponseDTO> get(SearchVeterinaryAppointmentCriteriaDTO criteriaDTO){
+        Pageable pageable = PageRequest.of(criteriaDTO.getPageActual(), criteriaDTO.getPageSize());
+
+        List<VeterinaryAppointment> appointments = veterinaryAppointmentRepository.findAll(AppointmentSpecification.withSearchCriteria(criteriaDTO), pageable);
+
+        if (appointments.isEmpty()) {
+            LOGGER.warn("Appointment are empty list.");
+            return Collections.emptyList();
+        }
+
         return appointments.stream()
                 .map(veterinaryAppointmentMapper::toResponseDTO)
                 .toList();

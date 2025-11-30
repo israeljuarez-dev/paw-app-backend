@@ -17,7 +17,7 @@ public class VeterinaryAppointmentMapper {
 
     private final VeterinaryServiceMapper veterinaryServiceMapper;
 
-    private ShiftMapper shiftMapper;
+    private final ShiftMapper shiftMapper;
 
     public VeterinaryAppointmentCreateResponseDTO toCreateResponseDTO(VeterinaryAppointment appointment) {
         return VeterinaryAppointmentCreateResponseDTO.builder()

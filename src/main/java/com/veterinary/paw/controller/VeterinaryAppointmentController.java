@@ -1,5 +1,6 @@
 package com.veterinary.paw.controller;
 
+import com.veterinary.paw.dto.criteria.appointment.SearchVeterinaryAppointmentCriteriaDTO;
 import com.veterinary.paw.dto.request.VeterinaryAppointmentCreateRequestDTO;
 import com.veterinary.paw.dto.response.VeterinaryAppointmentCreateResponseDTO;
 import com.veterinary.paw.dto.response.VeterinaryAppointmentResponseDTO;
@@ -35,9 +36,9 @@ public class VeterinaryAppointmentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<VeterinaryAppointmentResponseDTO>> getAppointments() {
+    public ResponseEntity<List<VeterinaryAppointmentResponseDTO>> getAppointments(SearchVeterinaryAppointmentCriteriaDTO criteriaDTO) {
         LOGGER.info("Ingresando al método getAppointments() para obtener todas las citas veterinarias");
-        List<VeterinaryAppointmentResponseDTO> responses = veterinaryAppointmentService.get();
+        List<VeterinaryAppointmentResponseDTO> responses = veterinaryAppointmentService.get(criteriaDTO);
         if (responses.isEmpty()) {
             LOGGER.warn("No se encontraron citas registradas");
             return ResponseEntity.noContent().build();
