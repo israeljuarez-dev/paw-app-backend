@@ -21,9 +21,6 @@ public record ShiftResponseDTO(
         LocalTime endTime,
 
         @JsonProperty("available")
-        Boolean available,
-
-        @JsonProperty("veterinary")
-        VeterinaryResponseDTO veterinaryResponseDTO
+        Boolean available
 ) {
 }

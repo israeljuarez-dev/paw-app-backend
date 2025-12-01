@@ -1,7 +1,9 @@
 package com.veterinary.paw.controller;
 
+import com.veterinary.paw.domain.VeterinaryAppointment;
 import com.veterinary.paw.dto.criteria.appointment.SearchVeterinaryAppointmentCriteriaDTO;
 import com.veterinary.paw.dto.request.VeterinaryAppointmentCreateRequestDTO;
+import com.veterinary.paw.dto.request.appointment.VeterinaryAppointmentRegisterRequestDTO;
 import com.veterinary.paw.dto.response.ResponseDTO;
 import com.veterinary.paw.dto.response.VeterinaryAppointmentCreateResponseDTO;
 import com.veterinary.paw.dto.response.VeterinaryAppointmentResponseDTO;
@@ -62,39 +64,36 @@ public class VeterinaryAppointmentController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
-    public ResponseEntity<ResponseDTO> registerVeterinaryAppointment(
-            @RequestBody @Valid VeterinaryAppointmentCreateRequestDTO request
-    ){
-        LOGGER.info("➡Ingresando al método registerVeterinaryAppointment() con datos: petId={}, veterinaryId={}, serviceId={}, shiftId={}",
-                request.idPet(), request.idVeterinary(), request.idVeterinaryService(), request.idShift());
-        VeterinaryAppointmentCreateResponseDTO appointment = veterinaryAppointmentService.register(request);
+    @PostMapping("/register")
+    public ResponseEntity<ResponseDTO> registerVeterinaryAppointment(@RequestBody @Valid VeterinaryAppointmentRegisterRequestDTO request){
+        LOGGER.info("Ingresando al método registerVeterinaryAppointment()");
+        VeterinaryAppointmentResponseDTO appointmentResponseDTO = veterinaryAppointmentService.registerAppointment(request);
 
         ResponseDTO response = ResponseDTO.builder()
                 .message("Cita registrada exitosamente!")
                 .status(HttpStatus.CREATED.value())
-                .data(appointment)
+                .data(appointmentResponseDTO)
                 .build();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseDTO> updateAppointment(
-            @PathVariable @Min(1) Long id,
-            @RequestBody @Valid VeterinaryAppointmentCreateRequestDTO request
+    @PutMapping("/update/{id}") // O @PatchMapping si solo esperas campos parciales
+    public ResponseEntity<ResponseDTO> updateVeterinaryAppointment(
+            @PathVariable Long id,
+            @RequestBody @Valid VeterinaryAppointmentRegisterRequestDTO request
     ) {
-        LOGGER.info("Ingresando al método updateAppointment() con ID: {} y datos: petId={}, veterinaryId={}, serviceId={}, shiftId={}",
-                id, request.idPet(), request.idVeterinary(), request.idVeterinaryService(), request.idShift());
-        VeterinaryAppointmentCreateResponseDTO appointment = veterinaryAppointmentService.update(id, request);
+        LOGGER.info("Ingresando al método updateVeterinaryAppointment() para ID: {}", id);
+
+        VeterinaryAppointmentResponseDTO appointmentResponseDTO = veterinaryAppointmentService.update(id, request);
 
         ResponseDTO response = ResponseDTO.builder()
                 .message("Cita actualizada exitosamente!")
                 .status(HttpStatus.OK.value())
-                .data(appointment)
+                .data(appointmentResponseDTO)
                 .build();
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/{id}")

@@ -37,7 +37,6 @@ public class ShiftMapper {
                 .startTime(shift.getStartTime())
                 .endTime(shift.getEndTime())
                 .available(shift.getAvailable())
-                .veterinaryResponseDTO(veterinaryResponseDTO)
                 .build();
     }
 

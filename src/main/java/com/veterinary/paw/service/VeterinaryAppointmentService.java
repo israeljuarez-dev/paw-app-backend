@@ -1,11 +1,17 @@
 package com.veterinary.paw.service;
 
 import com.veterinary.paw.domain.*;
+import com.veterinary.paw.domain.VeterinaryService;
 import com.veterinary.paw.dto.criteria.appointment.SearchVeterinaryAppointmentCriteriaDTO;
 import com.veterinary.paw.dto.request.VeterinaryAppointmentCreateRequestDTO;
+import com.veterinary.paw.dto.request.appointment.CustomerInfoDTO;
+import com.veterinary.paw.dto.request.appointment.PetInfoDTO;
+import com.veterinary.paw.dto.request.appointment.VeterinaryAppointmentRegisterRequestDTO;
 import com.veterinary.paw.dto.response.VeterinaryAppointmentCreateResponseDTO;
 import com.veterinary.paw.dto.response.VeterinaryAppointmentResponseDTO;
 import com.veterinary.paw.enums.ApiErrorEnum;
+import com.veterinary.paw.enums.AppointmentStatusEnum;
+import com.veterinary.paw.enums.PetGenderEnum;
 import com.veterinary.paw.exception.PawException;
 import com.veterinary.paw.mapper.VeterinaryAppointmentMapper;
 import com.veterinary.paw.repository.*;
@@ -19,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,6 +46,8 @@ public class VeterinaryAppointmentService {
     private final VeterinaryServiceRepository veterinaryServiceRepository;
 
     private final VeterinaryAppointmentMapper veterinaryAppointmentMapper;
+
+    private final CustomerRepository customerRepository;
 
 
     @Transactional(readOnly = true)
@@ -68,6 +77,7 @@ public class VeterinaryAppointmentService {
         return veterinaryAppointmentMapper.toResponseDTO(appointment);
     }
 
+    /*
     @Transactional
     public VeterinaryAppointmentCreateResponseDTO register(VeterinaryAppointmentCreateRequestDTO request) {
         Pet pet = findPet(request.idPet());
@@ -102,55 +112,154 @@ public class VeterinaryAppointmentService {
                 appointment.getId(), pet.getId(), veterinary.getId(), shift.getDate());
 
         return veterinaryAppointmentMapper.toCreateResponseDTO(appointment);
+    }*/
+
+    @Transactional
+    public VeterinaryAppointmentResponseDTO registerAppointment(VeterinaryAppointmentRegisterRequestDTO registerRequestDTO) {
+        CustomerInfoDTO customerInfo = registerRequestDTO.customerInfo();
+        Customer customer = customerRepository.findByDni(customerInfo.customerDni())
+                .orElseGet(() -> Customer.builder()
+                        .dni(customerInfo.customerDni())
+                        .firstName(customerInfo.customerFirstName())
+                        .lastName(customerInfo.customerLastName())
+                        .phoneNumber(customerInfo.customerPhoneNumber())
+                        .email(customerInfo.customerEmail())
+                        .build());
+
+        customerRepository.save(customer);
+
+        PetInfoDTO petInfo = registerRequestDTO.petInfo();
+        Pet pet = petRepository.findByFirstNameAndLastNameAndOwner(petInfo.petFirstName(), petInfo.petLastName(), customer)
+                .orElseGet(() -> Pet.builder()
+                        .firstName(petInfo.petFirstName())
+                        .lastName(petInfo.petLastName())
+                        .age(Period.between(petInfo.petBirthDate(), LocalDate.now()).getYears())
+                        .gender(PetGenderEnum.valueOf(petInfo.petGender().toUpperCase()))
+                        .specie(petInfo.petSpecie())
+                        .birthDate(petInfo.petBirthDate())
+                        .owner(customer)
+                        .build());
+
+        petRepository.save(pet);
+
+        Veterinary veterinary = findVeterinary(registerRequestDTO.veterinaryId());
+
+        com.veterinary.paw.domain.VeterinaryService service = findVeterinaryService(registerRequestDTO.veterinaryServiceId());
+
+        Shift shift = findShift(registerRequestDTO.shiftId());
+
+        validateAppointmentDateIsFuture(shift.getDate());
+
+        List<Shift> veterinaryShifts = getShiftsForVeterinarianOnDate(veterinary.getId(),shift.getDate());
+
+        Shift coincidentShift = validateShiftTimes(shift, veterinaryShifts);
+
+        List<Shift> reservedShifts = shiftRepository.findReservedShiftsByVeterinaryIdAndDate(veterinary.getId(), shift.getDate());
+
+        validateShiftConflicts(coincidentShift , reservedShifts);
+
+
+        VeterinaryAppointment appointment = VeterinaryAppointment.builder()
+                .observations(registerRequestDTO.observations())
+                .registerDate(LocalDate.now())
+                .status(AppointmentStatusEnum.PENDIENTE)
+                .pet(pet)
+                .veterinary(veterinary)
+                .veterinaryService(service)
+                .shift(shift)
+                .build();
+
+        shift.setAvailable(false);
+        shiftRepository.save(shift);
+
+        VeterinaryAppointment savedAppointment = veterinaryAppointmentRepository.save(appointment);
+
+        return veterinaryAppointmentMapper.toResponseDTO(savedAppointment);
     }
 
     @Transactional
-    public VeterinaryAppointmentCreateResponseDTO update(Long id, VeterinaryAppointmentCreateRequestDTO request) {
+    public VeterinaryAppointmentResponseDTO update(Long id, VeterinaryAppointmentRegisterRequestDTO request) {
+        // 1. Verificar si la cita existe
         VeterinaryAppointment existingAppointment = veterinaryAppointmentRepository.findById(id)
                 .orElseThrow(()->{
                     LOGGER.error("Cita veterinaria no encontrada para actualizar. ID: {}", id);
                     return new PawException(ApiErrorEnum.VETERINARY_APPOINTMENT_NOT_FOUND);
                 });
 
-        Pet pet = findPet(request.idPet());
-        Veterinary veterinary = findVeterinary(request.idVeterinary());
-        com.veterinary.paw.domain.VeterinaryService service = findVeterinaryService(request.idVeterinaryService());
-        Shift newShift = findShift(request.idShift());
+        // 2. Lógica de Customer (Unificación con register)
+        CustomerInfoDTO customerInfo = request.customerInfo();
+        Customer customer = customerRepository.findByDni(customerInfo.customerDni())
+                .orElseGet(() -> Customer.builder()
+                        .dni(customerInfo.customerDni())
+                        .firstName(customerInfo.customerFirstName())
+                        .lastName(customerInfo.customerLastName())
+                        .phoneNumber(customerInfo.customerPhoneNumber())
+                        .email(customerInfo.customerEmail())
+                        .build());
+        customerRepository.save(customer);
 
+        // 3. Lógica de Pet (Unificación con register)
+        PetInfoDTO petInfo = request.petInfo();
+        int age = Period.between(petInfo.petBirthDate(), LocalDate.now()).getYears();
+
+        Pet pet = petRepository.findByFirstNameAndLastNameAndOwner(petInfo.petFirstName(), petInfo.petLastName(), customer)
+                .orElseGet(() -> Pet.builder()
+                        .firstName(petInfo.petFirstName())
+                        .lastName(petInfo.petLastName())
+                        .age(age)
+                        .gender(PetGenderEnum.valueOf(petInfo.petGender().toUpperCase()))
+                        .specie(petInfo.petSpecie())
+                        .birthDate(petInfo.petBirthDate())
+                        .owner(customer)
+                        .build());
+        petRepository.save(pet);
+
+
+        // 4. Búsqueda de Entidades a actualizar
+        Veterinary veterinary = findVeterinary(request.veterinaryId());
+        com.veterinary.paw.domain.VeterinaryService service = findVeterinaryService(request.veterinaryServiceId());
+        Shift newShift = findShift(request.shiftId());
+
+        // 5. Validaciones de Shift (Unificación con register)
         validateAppointmentDateIsFuture(newShift.getDate());
-
         List<Shift> veterinaryShifts = getShiftsForVeterinarianOnDate(veterinary.getId(), newShift.getDate());
-
         Shift coincidentShift = validateShiftTimes(newShift, veterinaryShifts);
 
+        // Al actualizar, el shift actual DEBE ser excluido de la validación de conflictos.
+        // Asumo que tu findReservedShiftsByVeterinaryIdAndDate lo maneja o necesitas una lógica para excluir el shift original.
         List<Shift> reservedShifts = shiftRepository.findReservedShiftsByVeterinaryIdAndDate(veterinary.getId(), newShift.getDate());
         validateShiftConflicts(coincidentShift , reservedShifts);
 
+        // 6. Manejo del Shift anterior
         Shift previousShift = existingAppointment.getShift();
         if (!previousShift.getId().equals(newShift.getId())) {
+            // Si el turno cambió, liberamos el anterior
             previousShift.setAvailable(true);
             shiftRepository.save(previousShift);
-        }
 
-        existingAppointment.setStatus(request.status());
+            // El nuevo turno pasa a ser no disponible
+            newShift.setAvailable(false);
+            shiftRepository.save(newShift);
+        }
+        // NOTA: Si el shift no cambió, sus validaciones ya aseguran que está no disponible y reservado.
+
+        // 7. Actualización de la Cita existente
         existingAppointment.setObservations(request.observations());
-        existingAppointment.setRegisterDate(LocalDate.now());
+        existingAppointment.setRegisterDate(LocalDate.now()); // Registro de la actualización
         existingAppointment.setPet(pet);
         existingAppointment.setVeterinary(veterinary);
         existingAppointment.setVeterinaryService(service);
-        existingAppointment.setShift(newShift);
-
-        newShift.setAvailable(false);
-        shiftRepository.save(newShift);
+        existingAppointment.setShift(newShift); // Se asigna el nuevo (o el mismo) shift
 
         VeterinaryAppointment updatedAppointment = veterinaryAppointmentRepository.save(existingAppointment);
 
         LOGGER.info("Cita actualizada correctamente. ID cita: {}, Mascota: {}, Veterinario: {}, Fecha: {}",
                 updatedAppointment.getId(), pet.getId(), veterinary.getId(), newShift.getDate());
 
-
-        return veterinaryAppointmentMapper.toCreateResponseDTO(updatedAppointment);
+        // 8. Devolver DTO de respuesta (Unificación con register)
+        return veterinaryAppointmentMapper.toResponseDTO(updatedAppointment);
     }
+
 
     @Transactional
     public void delete(Long id){

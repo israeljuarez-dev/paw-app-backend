@@ -19,15 +19,15 @@ public record VeterinaryAppointmentResponseDTO(
         LocalDate registerDate,
 
         @JsonProperty("pet")
-        PetResponseDTO petResponseDTO,
+        PetResponseDTO pet,
 
         @JsonProperty("veterinary")
-        VeterinaryResponseDTO veterinaryResponseDTO,
+        VeterinaryResponseDTO veterinary,
 
         @JsonProperty("veterinary_service")
-        VeterinaryServiceResponseDTO veterinaryServiceResponseDTO,
+        VeterinaryServiceResponseDTO veterinaryService,
 
         @JsonProperty("shift")
-        ShiftResponseDTO shiftResponseDTO
+        ShiftResponseDTO shift
 ) {
 }
