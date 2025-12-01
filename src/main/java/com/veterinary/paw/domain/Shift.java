@@ -40,7 +40,6 @@ public class Shift {
     )
     @JoinColumn(
             name = "id_veterinary",
-            nullable = false,
             foreignKey = @ForeignKey(name = "fk_veterinary_shift")
     )
     private Veterinary veterinary;

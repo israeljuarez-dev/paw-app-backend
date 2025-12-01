@@ -58,7 +58,7 @@ public class PetMapper {
                 .gender(pet.getGender())
                 .specie(pet.getSpecie())
                 .birthDate(pet.getBirthDate())
-                .owner(customerMapper.toResponseDto(owner))
+                .owner(customerMapper.toResponseDTO(owner))
                 .build();
     }
 
