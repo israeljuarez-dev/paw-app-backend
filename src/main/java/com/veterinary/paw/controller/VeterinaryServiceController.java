@@ -1,6 +1,7 @@
 package com.veterinary.paw.controller;
 
 import com.veterinary.paw.dto.request.VeterinaryServiceCreateRequestDTO;
+import com.veterinary.paw.dto.response.ResponseDTO;
 import com.veterinary.paw.dto.response.VeterinaryServiceResponseDTO;
 import com.veterinary.paw.service.VeterinaryServiceService;
 import jakarta.validation.Valid;
@@ -26,59 +27,90 @@ public class VeterinaryServiceController {
     private final VeterinaryServiceService veterinaryServiceService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<VeterinaryServiceResponseDTO> getServiceById(@PathVariable @Min(1) Long id) {
+    public ResponseEntity<ResponseDTO> getServiceById(@PathVariable @Min(1) Long id) {
         LOGGER.info("Ingresando al método getServiceById() con ID: {}", id);
-        VeterinaryServiceResponseDTO response = veterinaryServiceService.getById(id);
+        VeterinaryServiceResponseDTO service = veterinaryServiceService.getById(id);
+
+        ResponseDTO response = ResponseDTO.builder()
+                .message("Servicio obtenido exitosamente!")
+                .status(HttpStatus.OK.value())
+                .data(service)
+                .build();
+
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<VeterinaryServiceResponseDTO>> getServices() {
+    public ResponseEntity<ResponseDTO> getServices() {
         LOGGER.info("Ingresando al método getServices() para obtener todos los servicios");
-        List<VeterinaryServiceResponseDTO> responses = veterinaryServiceService.get();
+        List<VeterinaryServiceResponseDTO> services = veterinaryServiceService.get();
 
-        if (responses.isEmpty()) {
+        if (services.isEmpty()) {
             LOGGER.warn("No se encontraron servicios veterinarios registrados");
             return ResponseEntity.noContent().build();
         }
 
-        LOGGER.info("Se encontraron {} servicios veterinarios registrados", responses.size());
-        return ResponseEntity.ok(responses);
+        ResponseDTO response = ResponseDTO.builder()
+                .message("Servicios obtenidos exitosamente!")
+                .status(HttpStatus.OK.value())
+                .data(services)
+                .build();
+
+        LOGGER.info("Se encontraron {} servicios veterinarios registrados", services.size());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<VeterinaryServiceResponseDTO> registerService(
+    public ResponseEntity<ResponseDTO> registerService(
             @RequestBody @Valid VeterinaryServiceCreateRequestDTO request
     ){
         LOGGER.info("➡Ingresando al método registerService() con datos: name={}, price={}",
                 request.name(), request.price());
 
-        VeterinaryServiceResponseDTO response = veterinaryServiceService.register(request);
+        VeterinaryServiceResponseDTO service = veterinaryServiceService.register(request);
 
-        LOGGER.info("Registro exitoso. Nuevo servicio ID: {}", response.id());
+        ResponseDTO response = ResponseDTO.builder()
+                .message("Servicio registrado exitosamente!")
+                .status(HttpStatus.CREATED.value())
+                .data(service)
+                .build();
+
+        LOGGER.info("Registro exitoso. Nuevo servicio ID: {}", service.id());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VeterinaryServiceResponseDTO> updateService(
+    public ResponseEntity<ResponseDTO> updateService(
             @PathVariable @Min(1) Long id,
             @RequestBody @Valid VeterinaryServiceCreateRequestDTO request
     ) {
         LOGGER.info("Ingresando al método updateService() con ID: {} y datos: name={}, price={}",
                 id, request.name(), request.price());
 
-        VeterinaryServiceResponseDTO response = veterinaryServiceService.update(id, request);
+        VeterinaryServiceResponseDTO service = veterinaryServiceService.update(id, request);
 
-        LOGGER.info("Actualización exitosa. Servicio ID: {}", response.id());
+        ResponseDTO response = ResponseDTO.builder()
+                .message("Servicio actualizado exitosamente!")
+                .status(HttpStatus.OK.value())
+                .data(service)
+                .build();
+
+        LOGGER.info("Actualización exitosa. Servicio ID: {}", service.id());
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteService(@PathVariable @Min(1) Long id) {
+    public ResponseEntity<ResponseDTO> deleteService(@PathVariable @Min(1) Long id) {
         LOGGER.info("Ingresando al método deleteService() con ID: {}", id);
         veterinaryServiceService.delete(id);
 
+        ResponseDTO response = ResponseDTO.builder()
+                .message("Servicio eliminado exitosamente!")
+                .status(HttpStatus.OK.value())
+                .data(null)
+                .build();
+
         LOGGER.info("Eliminación exitosa. Servicio ID: {}", id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(response);
     }
 }

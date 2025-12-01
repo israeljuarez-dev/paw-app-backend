@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 @Builder
 public record VeterinaryResponseDTO(
+
         Long id,
 
         @JsonProperty("first_name")

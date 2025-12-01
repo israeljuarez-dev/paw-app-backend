@@ -3,13 +3,9 @@ package com.veterinary.paw.dto.response;
 import lombok.Builder;
 
 @Builder
-public record UserResponseDTO(
-        Long id,
-
-        String email,
-
+public record ResponseDTO(
         String message,
-
-        int status
+        int status,
+        Object data
 ) {
 }

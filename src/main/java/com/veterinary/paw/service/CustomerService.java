@@ -29,7 +29,7 @@ public class CustomerService {
     @Transactional(readOnly = true)
     public List<CustomerResponseDTO> get() {
         return customerRepository.findAll().stream()
-                .map(customerMapper::toResponseDto)
+                .map(customerMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
@@ -41,7 +41,7 @@ public class CustomerService {
                     return new PawException(ApiErrorEnum.CUSTOMER_NOT_FOUND);
                 });
 
-        return customerMapper.toResponseDto(customer);
+        return customerMapper.toResponseDTO(customer);
     }
 
     @Transactional
@@ -65,7 +65,7 @@ public class CustomerService {
 
         Customer savedCustomer = customerRepository.save(newCustomer);
 
-        return customerMapper.toResponseDto(savedCustomer);
+        return customerMapper.toCreateResponseDTO(savedCustomer);
     }
 
     @Transactional
@@ -97,11 +97,11 @@ public class CustomerService {
             }
         }
 
-        customerMapper.updateEntityFromDto(customerToUpdate, request);
+        customerMapper.updateEntityFromDTO(customerToUpdate, request);
 
         Customer updatedCustomer = customerRepository.save(customerToUpdate);
 
-        return customerMapper.toResponseDto(updatedCustomer);
+        return customerMapper.toResponseDTO(updatedCustomer);
     }
 
     @Transactional

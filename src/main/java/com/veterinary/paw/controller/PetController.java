@@ -2,6 +2,7 @@ package com.veterinary.paw.controller;
 
 import com.veterinary.paw.dto.request.PetCreateRequestDTO;
 import com.veterinary.paw.dto.response.PetResponseDTO;
+import com.veterinary.paw.dto.response.ResponseDTO;
 import com.veterinary.paw.service.PetService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -26,58 +27,89 @@ public class PetController {
     private final PetService petService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<PetResponseDTO> getPetById(@PathVariable @Min(1) Long id) {
+    public ResponseEntity<ResponseDTO> getPetById(@PathVariable @Min(1) Long id) {
         LOGGER.info("Ingresando al método getPetById() con ID: {}", id);
-        PetResponseDTO response = petService.getById(id);
+        PetResponseDTO pet = petService.getById(id);
+
+        ResponseDTO response = ResponseDTO.builder()
+                .message("Mascota obtenida exitosamente!")
+                .status(HttpStatus.OK.value())
+                .data(pet)
+                .build();
+
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<PetResponseDTO>> getPets() {
+    public ResponseEntity<ResponseDTO> getPets() {
         LOGGER.info("Ingresando al método getPets() para obtener todas las mascotas");
-        List<PetResponseDTO> responses = petService.get();
-        if (responses.isEmpty()) {
+        List<PetResponseDTO> pets = petService.get();
+        if (pets.isEmpty()) {
             LOGGER.warn("No se encontraron mascotas registradas");
             return ResponseEntity.noContent().build();
         }
 
-        LOGGER.info("Se encontraron {} mascotas registradas", responses.size());
-        return ResponseEntity.ok(responses);
+        ResponseDTO response = ResponseDTO.builder()
+                .message("Mascotas obtenidas exitosamente!")
+                .status(HttpStatus.OK.value())
+                .data(pets)
+                .build();
+
+        LOGGER.info("Se encontraron {} mascotas registradas", pets.size());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<PetResponseDTO> registerPet(
+    public ResponseEntity<ResponseDTO> registerPet(
             @RequestBody @Valid PetCreateRequestDTO request
     ){
         LOGGER.info("➡Ingresando al método registerPet() con datos: firstName={}, specie={}, ownerId={}",
                 request.firstName(), request.specie(), request.ownerId());
 
-        PetResponseDTO response = petService.register(request);
+        PetResponseDTO pet = petService.register(request);
 
-        LOGGER.info("Registro exitoso. Nueva mascota ID: {}", response.id());
+        ResponseDTO response = ResponseDTO.builder()
+                .message("Mascota registrada exitosamente!")
+                .status(HttpStatus.CREATED.value())
+                .data(pet)
+                .build();
+
+        LOGGER.info("Registro exitoso. Nueva mascota ID: {}", pet.id());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PetResponseDTO> updatePet(
+    public ResponseEntity<ResponseDTO> updatePet(
             @PathVariable @Min(1) Long id,
             @RequestBody @Valid PetCreateRequestDTO request
     ) {
         LOGGER.info("Ingresando al método updatePet() con ID: {} y datos: firstName={}, specie={}, ownerId={}",
                 id, request.firstName(), request.specie(), request.ownerId());
 
-        PetResponseDTO response = petService.update(id, request);
+        PetResponseDTO pet = petService.update(id, request);
 
-        LOGGER.info("Actualización exitosa. Mascota ID: {}", response.id());
+        ResponseDTO response = ResponseDTO.builder()
+                .message("Mascota actualizada exitosamente!")
+                .status(HttpStatus.OK.value())
+                .data(pet)
+                .build();
+
+        LOGGER.info("Actualización exitosa. Mascota ID: {}", pet.id());
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePet(@PathVariable @Min(1) Long id) {
+    public ResponseEntity<ResponseDTO> deletePet(@PathVariable @Min(1) Long id) {
         LOGGER.info("Ingresando al método deletePet() con ID: {}", id);
         petService.delete(id);
 
+        ResponseDTO response = ResponseDTO.builder()
+                .message("Mascota eliminada exitosamente!")
+                .status(HttpStatus.OK.value())
+                .data(null)
+                .build();
+
         LOGGER.info("Eliminación exitosa. Mascota ID: {}", id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(response);
     }
 }

@@ -8,6 +8,7 @@ import java.time.LocalTime;
 
 @Builder
 public record ShiftResponseDTO(
+
         Long id,
 
         @JsonProperty("shift_date")

@@ -3,6 +3,7 @@ package com.veterinary.paw.mapper;
 import com.veterinary.paw.domain.Customer;
 import com.veterinary.paw.dto.request.CustomerCreateRequestDTO;
 import com.veterinary.paw.dto.response.CustomerResponseDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,7 +23,7 @@ public class CustomerMapper {
                 .build();
     }
 
-    public CustomerResponseDTO toResponseDto(Customer customer) {
+    public CustomerResponseDTO toResponseDTO(Customer customer){
         if (customer == null) {
             return null;
         }
@@ -37,7 +38,22 @@ public class CustomerMapper {
                 .build();
     }
 
-    public void updateEntityFromDto(Customer customer, CustomerCreateRequestDTO dto) {
+    public CustomerResponseDTO toCreateResponseDTO(Customer customer) {
+        if (customer == null) {
+            return null;
+        }
+
+        return CustomerResponseDTO.builder()
+                .id(customer.getId())
+                .firstName(customer.getFirstName())
+                .lastName(customer.getLastName())
+                .dni(customer.getDni())
+                .phoneNumber(customer.getPhoneNumber())
+                .email(customer.getEmail())
+                .build();
+    }
+
+    public void updateEntityFromDTO(Customer customer, CustomerCreateRequestDTO dto) {
         if (customer != null && dto != null) {
             customer.setFirstName(dto.firstName());
             customer.setLastName(dto.lastName());

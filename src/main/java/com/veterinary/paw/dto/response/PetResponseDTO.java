@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 @Builder
 public record PetResponseDTO(
+
         Long id,
 
         @JsonProperty("first_name")

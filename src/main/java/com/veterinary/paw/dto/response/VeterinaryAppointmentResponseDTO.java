@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 @Builder
 public record VeterinaryAppointmentResponseDTO(
+
         Long id,
 
         AppointmentStatusEnum status,

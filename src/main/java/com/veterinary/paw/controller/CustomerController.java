@@ -2,6 +2,7 @@ package com.veterinary.paw.controller;
 
 import com.veterinary.paw.dto.request.CustomerCreateRequestDTO;
 import com.veterinary.paw.dto.response.CustomerResponseDTO;
+import com.veterinary.paw.dto.response.ResponseDTO;
 import com.veterinary.paw.service.CustomerService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -26,58 +27,89 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponseDTO> getCustomerById(@PathVariable @Min(1) Long id) {
+    public ResponseEntity<ResponseDTO> getCustomerById(@PathVariable @Min(1) Long id) {
         LOGGER.info("Ingresando al método getCustomerById() con ID: {}", id);
-        CustomerResponseDTO response = customerService.getById(id);
+        CustomerResponseDTO customer = customerService.getById(id);
+
+        ResponseDTO response = ResponseDTO.builder()
+                .message("Cliente obtenido exitosamente!")
+                .status(HttpStatus.OK.value())
+                .data(customer)
+                .build();
+
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<CustomerResponseDTO>> getCustomers() {
+    public ResponseEntity<ResponseDTO> getCustomers() {
         LOGGER.info("Ingresando al método getCustomers() para obtener todos los clientes");
-        List<CustomerResponseDTO> responses = customerService.get();
-        if (responses.isEmpty()) {
+        List<CustomerResponseDTO> customers = customerService.get();
+        if (customers.isEmpty()) {
             LOGGER.warn("No se encontraron clientes registrados");
             return ResponseEntity.noContent().build();
         }
 
-        LOGGER.info("Se encontraron {} clientes registrados", responses.size());
-        return ResponseEntity.ok(responses);
+        ResponseDTO response = ResponseDTO.builder()
+                .message("Clientes obtenidos exitosamente!")
+                .status(HttpStatus.OK.value())
+                .data(customers)
+                .build();
+
+        LOGGER.info("Se encontraron {} clientes registrados", customers.size());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<CustomerResponseDTO> registerCustomer(
+    public ResponseEntity<ResponseDTO> registerCustomer(
             @RequestBody @Valid CustomerCreateRequestDTO request
     ){
         LOGGER.info("➡Ingresando al método registerCustomer() con datos: firstName={}, lastName={}, dni={}",
                 request.firstName(), request.lastName(), request.dni());
 
-        CustomerResponseDTO response = customerService.register(request);
+        CustomerResponseDTO customer = customerService.register(request);
 
-        LOGGER.info("Registro exitoso. Nuevo cliente ID: {}", response.id());
+        ResponseDTO response = ResponseDTO.builder()
+                .message("Cliente registrado exitosamente!")
+                .status(HttpStatus.CREATED.value())
+                .data(customer)
+                .build();
+
+        LOGGER.info("Registro exitoso. Nuevo cliente ID: {}", customer.id());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponseDTO> updateCustomer(
+    public ResponseEntity<ResponseDTO> updateCustomer(
             @PathVariable @Min(1) Long id,
             @RequestBody @Valid CustomerCreateRequestDTO request
     ) {
         LOGGER.info("Ingresando al método updateCustomer() con ID: {} y datos: firstName={}, lastName={}, dni={}",
                 id, request.firstName(), request.lastName(), request.dni());
 
-        CustomerResponseDTO response = customerService.update(id, request);
+        CustomerResponseDTO customer = customerService.update(id, request);
 
-        LOGGER.info("Actualización exitosa. Cliente ID: {}", response.id());
+        ResponseDTO response = ResponseDTO.builder()
+                .message("Cliente actualizado exitosamente!")
+                .status(HttpStatus.OK.value())
+                .data(customer)
+                .build();
+
+        LOGGER.info("Actualización exitosa. Cliente ID: {}", customer.id());
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable @Min(1) Long id) {
+    public ResponseEntity<ResponseDTO> deleteCustomer(@PathVariable @Min(1) Long id) {
         LOGGER.info("Ingresando al método deleteCustomer() con ID: {}", id);
         customerService.delete(id);
 
+        ResponseDTO response = ResponseDTO.builder()
+                .message("Cliente eliminado exitosamente!")
+                .status(HttpStatus.OK.value())
+                .data(null)
+                .build();
+
         LOGGER.info("Eliminación exitosa. Cliente ID: {}", id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(response);
     }
 }

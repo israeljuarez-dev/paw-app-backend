@@ -5,6 +5,7 @@ import lombok.Builder;
 
 @Builder
 public record CustomerResponseDTO (
+
         Long id,
 
         @JsonProperty("first_name")
