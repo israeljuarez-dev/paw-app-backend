@@ -25,5 +25,4 @@ public class AuthController {
         LoginResponseDTO response = authService.login(request.email(), request.password());
         return ResponseEntity.ok(response);
     }
-
 }

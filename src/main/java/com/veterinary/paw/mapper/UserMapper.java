@@ -3,6 +3,7 @@ package com.veterinary.paw.mapper;
 import com.veterinary.paw.domain.UserEntity;
 import com.veterinary.paw.dto.request.UserCreateRequestDTO;
 import com.veterinary.paw.dto.response.UserResponseDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,6 +33,8 @@ public class UserMapper {
         return UserResponseDTO.builder()
                 .id(user.getId())
                 .email(user.getEmail())
+                .message("Usuario registrado correctamente")
+                .status(HttpStatus.CREATED.value())
                 .build();
     }
 

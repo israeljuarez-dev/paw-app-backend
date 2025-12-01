@@ -5,6 +5,8 @@ import lombok.Builder;
 @Builder
 public record UserResponseDTO(
         Long id,
-        String email
+        String email,
+        String message,
+        int status
 ) {
 }
