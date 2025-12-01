@@ -6,6 +6,7 @@ import lombok.Builder;
 public record LoginResponseDTO(
         String email,
         String message,
-        String token
+        String token,
+        int status
 ) {
 }
